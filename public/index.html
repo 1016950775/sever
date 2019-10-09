@@ -1,0 +1,208 @@
+<html>
+
+<head>
+  <title>Express</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+
+<div id="app">
+  <!--<form>-->
+    <!--<div>-->
+      <!--选择父级：-->
+      <!--<select name="parentId">-->
+        <!--<option value="">-&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+      <!--</select>-->
+    <!--</div>-->
+    <!--<div>-->
+      <!--名称：<input type="text" name="title">-->
+    <!--</div>-->
+    <!--<div>-->
+      <!--<button type="submit">新增</button>-->
+    <!--</div>-->
+  <!--</form>-->
+  <!--<div id="list">{{defaultProps}}</div>-->
+  <el-tree accordion :data="classList" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+</div>
+
+
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+  const app = new Vue({
+    el:'#app',
+    data:{
+      classList:[],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
+    },
+    created:function () {
+      this.getClass();
+    },
+    methods:{
+      handleNodeClick(data) {
+        console.log(data.id);
+      },
+      ajax:function (url,cb) {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if(xhr.readyState==4 && xhr.status == 200){
+            cb(xhr.responseText)
+          }
+        };
+        xhr.open('get',url,true);
+        xhr.send();
+      },
+
+      getClass:function () {
+        const _this = this;
+        this.ajax(`/users/getClass`,function (result) {
+          if(result != 'err'){
+            // const json = _this.table2json(JSON.parse(result));
+            _this.classList = JSON.parse(result);
+          }
+        })
+      }
+    }
+  });
+
+
+
+
+/*  const form = document.forms[0];
+  const list = document.getElementById('list');
+  form.onsubmit = function () {
+    ajax(`/users/addClass?parentId=${form.parentId.value}&title=${form.title.value}`,function (result) {
+      if(result == 'ok'){
+        getClass();
+      }
+    });
+    return false
+  };
+
+  getClass();
+  function getClass() {
+    ajax(`/users/getClass`,function (result) {
+      if(result != 'err'){
+
+        const obj = JSON.parse(result);
+        let txt = '';
+        form.parentId.length = 1;
+        for(let i=0;i<obj.length;i++){
+          txt += `<div>`;
+          let s='';
+          for(let x = 1;x<obj[i].level;x++){
+            s += '……'
+          }
+          txt += s+obj[i].title;
+          txt += `</div>`;
+          form.parentId.add(new Option(s+obj[i].title,obj[i].id))
+        }
+
+        list.innerHTML = txt;
+      }
+    });
+  }
+
+  function ajax(url,cb) {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if(xhr.readyState==4 && xhr.status == 200){
+        cb(xhr.responseText)
+      }
+    };
+    xhr.open('get',url,true);
+    xhr.send();
+  }
+
+
+
+  let table = [
+          {"id":2,"title":"男装","parentId":0,"parentPath":"0","level":1},
+          {"id":11,"title":"裤子","parentId":2,"parentPath":"0,2","level":2},
+          {"id":14,"title":"白裤子","parentId":11,"parentPath":"0,2,11","level":3},
+          {"id":15,"title":"黑裤子","parentId":11,"parentPath":"0,2,11","level":3},
+          {"id":9,"title":"衬衫","parentId":2,"parentPath":"0,2","level":2},
+          {"id":12,"title":"白衬衫","parentId":9,"parentPath":"0,2,9","level":3},
+          {"id":13,"title":"花衬衫","parentId":9,"parentPath":"0,2,9","level":3},
+          {"id":3,"title":"女装","parentId":0,"parentPath":"0","level":1},
+          {"id":4,"title":"内衣","parentId":0,"parentPath":"0","level":1},
+          {"id":5,"title":"鞋靴","parentId":0,"parentPath":"0","level":1}
+    ];
+  // console.log(table2json(table));
+  table2json(table)
+
+  function table2json(obj){
+    let defaultjson = [];
+    let json = defaultjson;
+    for(let i=0;i<obj.length;i++){
+      let newObj = {id:obj[i].id,label:obj[i].title,children:[]};
+      json = defaultjson;
+      for(let x=1;x<obj[i].level;x++){
+        json = json[json.length - 1].children;
+      }
+      json.push(newObj);
+      console.log(json);
+    }
+
+    return json;
+  }
+
+  let json = [
+    {
+      "id":2,
+      "label":"男装",
+      "children":[
+        {
+          "id":11,
+          "label":"裤子",
+          "children":[
+            {
+              "id":14,
+              "label":"白裤子",
+              "children":[]
+            },{
+              "id":15,
+              "label":"黑裤子",
+              "children":[]
+          }
+          ]
+        },
+        {
+          "id":9,
+          "label":"衬衫",
+          "children":[
+            {
+              "id":12,
+              "label":"白衬衫",
+              "children":[]
+            },{
+              "id":13,
+              "label":"花衬衫",
+              "children":[]
+          }
+          ]
+        }
+        ]
+    },{
+      "id":3,
+      "label":"女装",
+      "children":[]
+    },{
+      "id":4,
+      "label":"内衣",
+      "children":[]
+    },{
+      "id":5,
+      "label":"鞋靴",
+      "children":[]
+  }
+  ];*/
+</script>
+</body>
+
+</html>
